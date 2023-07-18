@@ -26,6 +26,12 @@ gitlab_runner_registration_token: ''
 
 gitlab_runner_sentry_dsn: ''
 
+# GitLab server IP
+gitlab_server_ip: ''
+
+# GitLab TLS CA file
+tls_ca_file: ''
+
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
@@ -38,6 +44,8 @@ gitlab_runner_session_server_session_timeout: 1800
 # You should provide a repository containing the needed packages before running this role.
 # Use this if you use a mirror repository
 # gitlab_runner_skip_package_repo_install: true
+
+gitlab_runner_config_update_mode: by_config_toml
 
 # The credentials for the Windows user used to run the gitlab-runner service.
 # Those credentials will be passed to `gitlab-runner.exe install`.
@@ -57,6 +65,7 @@ gitlab_runner_container_tag: latest
 gitlab_runner_container_name: gitlab-runner
 gitlab_runner_container_mount_path: ''
 gitlab_runner_container_restart_policy: unless-stopped
+gitlab_runner_container_latest_update: false
 # you can define a network which the container connects to
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
@@ -66,6 +75,9 @@ gitlab_runner_restart_state: restarted
 
 # default value for log_format
 # gitlab_runner_log_format: runner
+
+# default value for force accept self signed certificates
+force_accept_gitlab_server_self_signed: false
 
 # controls diffs for assemle config file
 gitlab_runner_show_config_diff: no
@@ -100,8 +112,14 @@ gitlab_runner_runners:
     locked: 'false'
     # Add container to a custom network
     docker_network_mode: bridge
+    # Change the services startup timeout
+    # docker_wait_for_services_timeout: 30
     # Custom CA certificate file
     # tls_ca_file: "/etc/ssl/private/Custom_Bundle-CA.pem"
+    # Client certificate file to (mTLS) authenticate with the peer
+    # tls_cert_file: "/etc/gitlab-runner/ssl/gitlab-runner.cert.pem"
+    # Client certificate's key file to (mTLS) authenticate with the peer
+    # tls_key_file: "/etc/gitlab-runner/ssl/gitlab-runner.key.pem"
     #
     # Custom environment variables injected to build environment
     env_vars: []
@@ -117,6 +135,11 @@ gitlab_runner_runners:
     # Sets the post_build_script. The default is not set.
     # post_build_script:
     #
+    # Add [[runner.docker.services]] for docker executor
+    # docker_services:
+    #   - name: docker:20.10.12-dind
+    #     command: ["--insecure-registry=10.0.0.0/24"]
+
     # Runner SSH user
     # ssh_user: ''
     #
